@@ -21,10 +21,9 @@ class camera {
         //change with user input
         //std::cout << "please input the aspect ratio" << std::endl;
         //std::cin >> aspectRatio;
-        int samplesPerPixel = 10;
-        
+        int samplesPerPixel = 5;
         int channelNum = 3;
-        uint8_t* pixels;
+
 
 
 
@@ -33,7 +32,7 @@ class camera {
         void render(const hittable& world) {
 
 
-
+            pixelSamplesScale = 1.0 / samplesPerPixel;
             pixels = new uint8_t[imageWidth * imageHeight * channelNum];
             int index = 0;
             for (int j = imageHeight - 1; j >= 0; --j) {
@@ -44,24 +43,22 @@ class camera {
                 //std::clog << imageHeight << std::endl;
 
                 for (int i = 0; i < imageWidth; ++i) {
-                    //auto r = float(i) / (float)imageWidth;
-                    //auto g = float(j) / (float)imageHeight;
-                    //auto b = 0.0;
+
                     color pixelColor(0 ,0 ,0);
+
                     for (int sample = 0; sample < samplesPerPixel; sample++) {
                         ray r = get_ray(i, j);
                         pixelColor += ray_col(r, world);
                     }
-                    auto pixelCenter = pixel00Loc + (i * pixelUDelta) + (j * pixelVDelta);
-                    auto rayDir = pixelCenter - cameraCenter;
-                    ray r(cameraCenter, rayDir);
+                    //auto pixelCenter = pixel00Loc + (i * pixelUDelta) + (j * pixelVDelta);
+                    //auto rayDir = pixelCenter - cameraCenter;
+                    //ray r(cameraCenter, rayDir);
 
                     //color pixelColor = ray_col(r, world);
-
-                    pixels = convertNormalisedToBit(pixels, index, pixelColor);
+                    
+                    pixels = convertNormalisedToBit(pixels, index, pixelSamplesScale * pixelColor);
                 }
             }
-
                 int imageWriteSuccess = stbi_write_jpg("output/output.jpg", imageWidth, imageHeight, 3, pixels, 100);
             if (imageWriteSuccess == 1){
                 std::clog << "image write success!" << std::endl;
@@ -78,12 +75,13 @@ class camera {
     /*private camera parameters*/
     int imageHeight;
     double pixelSamplesScale;
-    vec3 cameraCenter = point3(0,0,0);
+    vec3 cameraCenter;
     point3 center;
     point3 pixel00Loc;
     vec3 viewportUpperLeft;
     vec3 pixelUDelta;
     vec3 pixelVDelta;
+    uint8_t* pixels;
 
 
 
@@ -91,22 +89,21 @@ class camera {
 
         void initialise() {
 
-            aspectRatio = 1/aspectRatio;
-            imageHeight = static_cast<int>(imageWidth * aspectRatio);
+            imageHeight = static_cast<int>(imageWidth / aspectRatio);
             imageHeight = std::max(1, imageHeight);
             int channelNum = 3;
 
-            pixelSamplesScale = 1.0 / samplesPerPixel;
+            
 
             std::cout << "image width is " << imageWidth << std::endl;
             std::cout << "image height is " << imageHeight << std::endl;
             
-            uint8_t* pixels = new uint8_t[imageWidth * imageHeight * channelNum];
+            pixels = new uint8_t[imageWidth * imageHeight * channelNum];
 
             float focalLength = 1.0f;
             float viewportHeight = 2.0f;
             float viewportWidth = viewportHeight * (double(imageWidth)/imageHeight);
-            auto cameraCenter = point3(0,0,0);
+            cameraCenter = point3(0,0,0);
 
             vec3 viewportU = vec3(viewportWidth, 0, 0);
             vec3 viewportV = vec3(0, viewportHeight, 0);
@@ -122,7 +119,7 @@ class camera {
 
         ray get_ray(int i, int j) const {
             auto offset = sampleSquare();
-            auto pixelSample = pixel00Loc + ((i + offset.x()) * pixelUDelta) + ((i + offset.y()) * pixelVDelta);
+            auto pixelSample = pixel00Loc + ((i + offset.x()) * pixelUDelta) + ((j + offset.y()) * pixelVDelta);
 
             auto rayOrigin = center;
             auto rayDir = pixelSample - rayOrigin;

@@ -27,7 +27,7 @@ int main(){
 
     camera cam;
 
-    cam.samplesPerPixel = 100;
+    cam.samplesPerPixel = 1;
 
     cam.render(world); 
 
