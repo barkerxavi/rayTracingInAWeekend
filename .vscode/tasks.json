@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build OpenGL Project (MinGW)",
+            "type": "shell",
+            "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+
+                // Source files
+                "${workspaceFolder}/src/main.cpp",
+
+                // Include paths
+                "-I${workspaceFolder}/include",
+                "-IC:/msys64/ucrt64/include",
+
+                // Output exe
+                "-o",
+                "${workspaceFolder}/bin/main.exe",
+
+                // Library search path
+                "-LC:/msys64/ucrt64/lib",
+
+                // Link libraries
+                "-lglfw3",
+                "-lopengl32",
+                "-lgdi32"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
