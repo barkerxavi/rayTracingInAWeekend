@@ -8,13 +8,20 @@
 
 using color = vec3;
 
+inline double linearToGamma(double linearComponent){
+    if  (linearComponent > 0)
+        return std::sqrt(linearComponent);
+
+    return 0;
+}
+
 // Appends RGB values to the vector at a given index and updates the index
 inline uint8_t* convertNormalisedToBit(uint8_t* pixels, int& index, const color& pixelColor) {
     
     static const interval intensity (0.000, 0.999);
-    auto r = static_cast<int>(255.999 * intensity.clamp(pixelColor.x()));
-    auto g = static_cast<int>(255.999 * intensity.clamp(pixelColor.y()));
-    auto b = static_cast<int>(255.999 * intensity.clamp(pixelColor.z()));
+    auto r = static_cast<int>(255.999 * intensity.clamp(linearToGamma(pixelColor.x())));
+    auto g = static_cast<int>(255.999 * intensity.clamp(linearToGamma(pixelColor.y())));
+    auto b = static_cast<int>(255.999 * intensity.clamp(linearToGamma(pixelColor.z())));
 
 
     
