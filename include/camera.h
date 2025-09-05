@@ -7,10 +7,8 @@
 
 class camera {
     public:
-        camera() {
-            initialise();
-        }
-        /*public camera parameters*/
+
+            /*public camera parameters*/
         //image
         //default image width
         int imageWidth = 1920;
@@ -27,6 +25,14 @@ class camera {
         int channelNum = 3;
         int maxDepth = 10;
 
+        double focalLength = 50;
+        double sensorSize = 36;
+
+        camera() {
+            initialise();
+        }
+
+
 
 
 
@@ -34,9 +40,11 @@ class camera {
 
         void render(const hittable& world) {
 
+            initialise();
 
             pixelSamplesScale = 1.0 / samplesPerPixel;
             pixels = new uint8_t[imageWidth * imageHeight * channelNum];
+
             int index = 0;
             for (int j = imageHeight - 1; j >= 0; --j) {
                 //std::clog << imageHeight << std::endl << std::flush;
@@ -62,7 +70,10 @@ class camera {
                     pixels = convertNormalisedToBit(pixels, index, pixelSamplesScale * pixelColor);
                 }
             }
-                int imageWriteSuccess = stbi_write_jpg("output/output.jpg", imageWidth, imageHeight, 3, pixels, 100);
+
+            std::string focalLengthString = std::to_string(static_cast<int>(focalLength));
+            std::string outputName = "output/output_" + focalLengthString + "mm" + ".jpg";
+            int imageWriteSuccess = stbi_write_jpg(outputName.c_str(), imageWidth, imageHeight, 3, pixels, 100);
             if (imageWriteSuccess == 1){
                 std::clog << "image write success!" << std::endl;
             }
@@ -78,7 +89,6 @@ class camera {
     /*private camera parameters*/
     int imageHeight;
     double pixelSamplesScale;
-    vec3 cameraCenter;
     point3 center;
     point3 pixel00Loc;
     vec3 viewportUpperLeft;
@@ -104,10 +114,21 @@ class camera {
             
             pixels = new uint8_t[imageWidth * imageHeight * channelNum];
 
-            float focalLength = 1.0f;
-            float viewportHeight = 2.0f;
-            float viewportWidth = viewportHeight * (double(imageWidth)/imageHeight);
-            cameraCenter = point3(0,0,0);
+ 
+            //auto theta = 2 * atan(sensorSize / (2 * focalLength));
+            //auto theta = degrees_to_radians(wfov);
+            //auto w = std::tan(theta/2);
+
+            //float viewportWidth = 2 * w * 1.0;
+
+            //float viewportHeight = viewportWidth * (double(imageHeight)/imageWidth);
+
+            double focusDist = 1.0;
+
+            double viewportWidth = (sensorSize / focalLength) * focusDist;
+            double viewportHeight = viewportWidth * ( double(imageHeight) / double(imageWidth));
+
+            center = point3(0,0,0);
 
             vec3 viewportU = vec3(viewportWidth, 0, 0);
             vec3 viewportV = vec3(0, viewportHeight, 0);
@@ -115,7 +136,7 @@ class camera {
             pixelUDelta = viewportU / imageWidth;
             pixelVDelta = viewportV / imageHeight;
 
-            viewportUpperLeft = cameraCenter - vec3(0, 0, focalLength) - viewportU/2 - viewportV/2;
+            viewportUpperLeft = center - vec3(0, 0, focusDist) - viewportU/2 - viewportV/2;
             pixel00Loc = viewportUpperLeft + 0.5 * (pixelUDelta + pixelVDelta);
             
 
