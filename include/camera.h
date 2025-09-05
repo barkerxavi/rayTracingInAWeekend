@@ -23,6 +23,7 @@ class camera {
         //std::cin >> aspectRatio;
         int samplesPerPixel = 5;
         int channelNum = 3;
+        int maxDepth = 10;
 
 
 
@@ -48,7 +49,7 @@ class camera {
 
                     for (int sample = 0; sample < samplesPerPixel; sample++) {
                         ray r = get_ray(i, j);
-                        pixelColor += ray_col(r, world);
+                        pixelColor += ray_col(r, maxDepth, world);
                     }
                     //auto pixelCenter = pixel00Loc + (i * pixelUDelta) + (j * pixelVDelta);
                     //auto rayDir = pixelCenter - cameraCenter;
@@ -87,6 +88,7 @@ class camera {
 
 
 
+
         void initialise() {
 
             imageHeight = static_cast<int>(imageWidth / aspectRatio);
@@ -120,7 +122,6 @@ class camera {
         ray get_ray(int i, int j) const {
             auto offset = sampleSquare();
             auto pixelSample = pixel00Loc + ((i + offset.x()) * pixelUDelta) + ((j + offset.y()) * pixelVDelta);
-
             auto rayOrigin = center;
             auto rayDir = pixelSample - rayOrigin;
             return ray(rayOrigin, rayDir);
@@ -130,11 +131,15 @@ class camera {
             return vec3(randomDouble() - 0.5, randomDouble() - 0.5, 0);
         }
         
-        color ray_col(const ray& r, const hittable& world) {
+        color ray_col(const ray& r, int depth, const hittable& world) {
+            if (depth <= 0)
+                return color(0, 0, 0);
+
             hitRecord rec;
 
-            if (world.hit(r, interval(0, infinity), rec)) {
-                return 0.5 * (rec.normal + color(1,1,1));
+            if (world.hit(r, interval(0.001, infinity), rec)) {
+                vec3 direction = rec.normal + randomUnitVector();
+                return 0.5 * ray_col(ray(rec.p, direction), depth-1, world);
             }
 
             vec3 unitDir = unit_vector(r.direction());

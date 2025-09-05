@@ -21,13 +21,19 @@ int main(){
     //World
     hittableList world;
 
-    world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
+    world.add(make_shared<sphere>(point3(0.5, 0, -1), 0.5));
+    world.add(make_shared<sphere>(point3(-1.3, 0.05, -2), 0.6));
+
+
     world.add(make_shared<sphere>(point3(0, -10000.5, -1), 10000));
 
 
     camera cam;
-
-    cam.samplesPerPixel = 1;
+    std::cout << "how many samples for ya then?" << std::endl;
+    std::cin >> cam.samplesPerPixel;
+    
+    cam.maxDepth = 5;
+    
 
     cam.render(world); 
 
