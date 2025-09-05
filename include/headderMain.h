@@ -47,6 +47,8 @@ inline double randomDouble(double min, double max) {
 #include <hittable.h>
 #include <hittableList.h>
 #include <interval.h>
+#include <sphere.h>
 #include <camera.h>
+#include <material.h>
 
 #endif
