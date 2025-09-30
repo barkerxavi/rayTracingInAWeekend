@@ -1,0 +1,51 @@
+# VS Code settings folder
+
+.vscode/
+.vscode
+
+# Build output
+
+*.exe
+*.out
+*.obj
+*.o
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+
+# CMake / build system files (if used)
+
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+
+# Debug files
+
+*.pdb
+*.ilk
+*.idb
+
+# Temporary files
+
+*.log
+*.tmp
+*.swp
+*.swo
+
+# OS files
+
+.DS_Store
+Thumbs.db
+*.bak
+*.orig
+*.rej
+
+# Node modules (if you have JS/TS code)
+
+node_modules/
+
+# Optional: ignore gitignore itself (rare)
+
+# .gitignore
