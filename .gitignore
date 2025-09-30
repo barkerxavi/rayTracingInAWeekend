@@ -49,3 +49,7 @@ node_modules/
 # Optional: ignore gitignore itself (rare)
 
 # .gitignore
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
