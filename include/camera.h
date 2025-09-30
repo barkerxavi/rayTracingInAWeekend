@@ -77,7 +77,7 @@ class camera {
             std::string outputName = "output/output_" + focalLengthString + "mm" + "uni" + ".jpg";
             std::cout << "output path is: " << outputName << std::endl;
             std::cout << "output width and height is: " << imageWidth << " by " << imageHeight << std::endl;
-            std::cout << "output buffer reads: " << static_cast<int>(pixels) << std::endl;
+            std::cout << "output buffer reads: " << pixels << std::endl;
             int imageWriteSuccess = stbi_write_jpg(outputName.c_str(), imageWidth, imageHeight, 3, pixels, 100);
             if (imageWriteSuccess == 1){
                 std::clog << "image write success!" << std::endl;
