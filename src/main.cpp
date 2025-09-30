@@ -8,7 +8,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <glad/glad.h>
+//#include <glad/glad.h>
 #include <cmath>
 
 
@@ -68,9 +68,14 @@ int main(){
 
 
     world.add(make_shared<sphere>(point3(0, -10000.5, -1), 10000, material_ground));
-
+float newAspectRatio;
 
     camera cam;
+    std::cout << "image resolution" << std::endl;
+    std::cin >> cam.imageWidth;
+    std::cout << "aspectRatio" << std::endl;
+    std::cin >> newAspectRatio;
+    cam.aspectRatio = static_cast<float>(newAspectRatio);
     std::cout << "how many samples for ya then?" << std::endl;
     std::cin >> cam.samplesPerPixel;
     std::cout << "and the depth?" << std::endl;

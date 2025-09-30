@@ -60,6 +60,7 @@ class camera {
                     for (int sample = 0; sample < samplesPerPixel; sample++) {
                         ray r = get_ray(i, j);
                         pixelColor += ray_col(r, maxDepth, world);
+
                     }
                     //auto pixelCenter = pixel00Loc + (i * pixelUDelta) + (j * pixelVDelta);
                     //auto rayDir = pixelCenter - cameraCenter;
@@ -68,11 +69,15 @@ class camera {
                     //color pixelColor = ray_col(r, world);
                     
                     pixels = convertNormalisedToBit(pixels, index, pixelSamplesScale * pixelColor);
+                    //std::cout << "current pixel colour is: " << pixelColor << std::endl;
                 }
             }
 
             std::string focalLengthString = std::to_string(static_cast<int>(focalLength));
-            std::string outputName = "output/output_" + focalLengthString + "mm" + ".jpg";
+            std::string outputName = "output/output_" + focalLengthString + "mm" + "uni" + ".jpg";
+            std::cout << "output path is: " << outputName << std::endl;
+            std::cout << "output width and height is: " << imageWidth << " by " << imageHeight << std::endl;
+            std::cout << "output buffer reads: " << static_cast<int>(pixels) << std::endl;
             int imageWriteSuccess = stbi_write_jpg(outputName.c_str(), imageWidth, imageHeight, 3, pixels, 100);
             if (imageWriteSuccess == 1){
                 std::clog << "image write success!" << std::endl;

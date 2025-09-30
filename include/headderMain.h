@@ -10,7 +10,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <glad/glad.h>
+//#include <glad/glad.h>
 #include <cstdlib>
 
 #define STB_IMAGE_IMPLEMENTATION
